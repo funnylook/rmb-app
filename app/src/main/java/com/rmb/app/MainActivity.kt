@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -15,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.rmb.app.data.AppDatabase
-import com.rmb.app.data.Transaction
 import com.rmb.app.ui.*
 import com.rmb.app.ui.theme.RmbTheme
 import com.rmb.app.util.SmsReader
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
     private fun loadSmsData() {
         val transactions = SmsReader.readAllTransactions(this)
         if (transactions.isNotEmpty()) {
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                 val dao = db.transactionDao()
                 // 去重插入
                 for (t in transactions) {
